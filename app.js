@@ -7,6 +7,7 @@ let currentUser = null;
 let bookings = [];
 let matchmakingSlots = [];
 let priorityScores = {};
+let testUsers = [];
 
 // Demo data
 const demoCourts = [
@@ -453,6 +454,7 @@ async function loadAdminPage() {
     loadPriorityScores();
     loadRecentActivity();
     loadCharts();
+    loadAdminControls();
     await loadAIInsights();
 }
 
@@ -543,12 +545,33 @@ function loadCharts() {
                     data: [12, 19, 15, 25, 22, 30, 28],
                     borderColor: 'rgb(59, 130, 246)',
                     backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                    tension: 0.4
+                    tension: 0.4,
+                    borderWidth: 2,
+                    pointRadius: 3
                 }]
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            display: true,
+                            drawBorder: false
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
             }
         });
     }
@@ -567,12 +590,24 @@ function loadCharts() {
                         'rgba(16, 185, 129, 0.8)',
                         'rgba(245, 158, 11, 0.8)',
                         'rgba(239, 68, 68, 0.8)'
-                    ]
+                    ],
+                    borderWidth: 0
                 }]
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 10,
+                            font: {
+                                size: 11
+                            }
+                        }
+                    }
+                }
             }
         });
     }
@@ -760,4 +795,324 @@ function calculateStats() {
         avgDuration: '1h',
         cancellations: 0 // Would be calculated from cancellation history
     };
+}
+
+// Admin Control Functions
+function loadAdminControls() {
+    loadBookingEditor();
+    loadTestUsersList();
+}
+
+function loadBookingEditor() {
+    const select = document.getElementById('editBookingSelect');
+    if (!select) return;
+
+    const currentBookings = isDemoMode ? demoBookings : bookings;
+    
+    select.innerHTML = '<option value="">Choose a booking to edit</option>' +
+        currentBookings.map(booking => 
+            `<option value="${booking.id}">${booking.player} - ${booking.court} - ${booking.date} ${booking.time}</option>`
+        ).join('');
+
+    select.addEventListener('change', function() {
+        const bookingId = this.value;
+        if (bookingId) {
+            const booking = currentBookings.find(b => b.id === bookingId);
+            if (booking) {
+                document.getElementById('editPlayerName').value = booking.player || '';
+                document.getElementById('editCourt').value = booking.court || 'Court A';
+                document.getElementById('editStatus').value = booking.status || 'confirmed';
+            }
+        }
+    });
+}
+
+function saveBookingEdit() {
+    const bookingId = document.getElementById('editBookingSelect').value;
+    if (!bookingId) {
+        showAlert('Please select a booking to edit', 'error');
+        return;
+    }
+
+    const updatedBooking = {
+        id: bookingId,
+        player: document.getElementById('editPlayerName').value,
+        court: document.getElementById('editCourt').value,
+        status: document.getElementById('editStatus').value,
+        // Keep existing data
+        ...bookings.find(b => b.id === bookingId)
+    };
+
+    if (isDemoMode) {
+        const index = bookings.findIndex(b => b.id === bookingId);
+        if (index !== -1) {
+            bookings[index] = updatedBooking;
+        }
+    } else {
+        // Update in Puter storage
+        puter.kv.set(`booking_${bookingId}`, updatedBooking);
+    }
+
+    showAlert('Booking updated successfully!', 'success');
+    loadBookingEditor();
+    loadCurrentBookings();
+    loadStats();
+}
+
+function deleteBooking() {
+    const bookingId = document.getElementById('editBookingSelect').value;
+    if (!bookingId) {
+        showAlert('Please select a booking to delete', 'error');
+        return;
+    }
+
+    if (!confirm('Are you sure you want to delete this booking?')) {
+        return;
+    }
+
+    if (isDemoMode) {
+        bookings = bookings.filter(b => b.id !== bookingId);
+    } else {
+        puter.kv.delete(`booking_${bookingId}`);
+    }
+
+    showAlert('Booking deleted successfully!', 'success');
+    loadBookingEditor();
+    loadCurrentBookings();
+    loadStats();
+}
+
+function addTestUser() {
+    const name = document.getElementById('testUserName').value.trim();
+    const score = parseInt(document.getElementById('testUserScore').value) || 50;
+    const profile = document.getElementById('testUserProfile').value;
+    const bookingHistory = parseInt(document.getElementById('testUserBookings').value) || 0;
+
+    if (!name) {
+        showAlert('Please enter a user name', 'error');
+        return;
+    }
+
+    const testUser = {
+        id: Date.now().toString(),
+        name,
+        score,
+        profile,
+        bookingHistory,
+        createdAt: new Date().toISOString()
+    };
+
+    testUsers.push(testUser);
+    
+    // Update priority scores
+    priorityScores[name] = {
+        score,
+        profile,
+        bookingHistory,
+        trend: '+0'
+    };
+
+    showAlert('Test user added successfully!', 'success');
+    
+    // Clear form
+    document.getElementById('testUserName').value = '';
+    document.getElementById('testUserScore').value = '';
+    document.getElementById('testUserBookings').value = '';
+    
+    loadTestUsersList();
+    loadPriorityScores();
+}
+
+function loadTestUsersList() {
+    const container = document.getElementById('testUsersList');
+    if (!container) return;
+
+    if (testUsers.length === 0) {
+        container.innerHTML = '<div class="text-gray-500 text-sm">No test users yet</div>';
+        return;
+    }
+
+    container.innerHTML = testUsers.map(user => `
+        <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+            <div class="flex-1">
+                <div class="text-sm font-medium">${user.name}</div>
+                <div class="text-xs text-gray-500">Score: ${user.score} | ${user.profile}</div>
+            </div>
+            <button onclick="removeTestUser('${user.id}')" class="text-red-500 hover:text-red-700 text-xs">
+                Remove
+            </button>
+        </div>
+    `).join('');
+}
+
+function removeTestUser(userId) {
+    testUsers = testUsers.filter(u => u.id !== userId);
+    const user = testUsers.find(u => u.id === userId);
+    if (user && priorityScores[user.name]) {
+        delete priorityScores[user.name];
+    }
+    
+    loadTestUsersList();
+    loadPriorityScores();
+    showAlert('Test user removed', 'success');
+}
+
+async function runAIAnalysis() {
+    const analysisType = document.getElementById('aiAnalysisType').value;
+    const timePeriod = document.getElementById('aiTimePeriod').value;
+    const resultsContainer = document.getElementById('aiResults');
+    
+    if (!resultsContainer) return;
+
+    resultsContainer.innerHTML = '<div class="text-purple-700 text-sm">Running AI analysis...</div>';
+
+    try {
+        let results;
+        
+        if (isDemoMode) {
+            results = getDemoAIResults(analysisType, timePeriod);
+        } else {
+            const prompt = generateAIPrompt(analysisType, timePeriod);
+            const aiResponse = await puter.ai.chat(prompt);
+            results = parseAIResponse(aiResponse);
+        }
+
+        displayAIResults(results, analysisType);
+
+    } catch (error) {
+        resultsContainer.innerHTML = '<div class="text-red-700 text-sm">AI analysis failed. Please try again.</div>';
+    }
+}
+
+function getDemoAIResults(analysisType, timePeriod) {
+    const results = {
+        patterns: [
+            "Peak booking hours are 6-8 PM on weekdays",
+            "Weekend courts are 40% less utilized than weekdays",
+            "Court B has the highest cancellation rate (15%)",
+            "Players with high priority scores book 3x more frequently"
+        ],
+        cancellations: [
+            "Predict 12 cancellations this week based on historical patterns",
+            "High-risk time slots: 7-8 PM weekdays",
+            "Players with 'frequent canceller' profile have 60% higher risk",
+            "Weather-related cancellations increase by 25% during rainy season"
+        ],
+        optimization: [
+            "Reallocate 20% of Court A bookings to Court D during peak hours",
+            "Offer 10% discount for 2-4 PM slots to increase utilization",
+            "Implement dynamic pricing for high-demand time slots",
+            "Consider adding weekend morning promotions"
+        ],
+        rankings: [
+            "Top 3 reliable players: John Doe (95), Sarah Lee (91), Mike Chen (88)",
+            "5 players need priority score review due to frequent cancellations",
+            "New players show 70% retention rate after first month",
+            "VIP players generate 45% of total revenue"
+        ]
+    };
+
+    return results[analysisType] || [];
+}
+
+function generateAIPrompt(analysisType, timePeriod) {
+    const prompts = {
+        patterns: `Analyze booking patterns for the ${timePeriod} and provide insights on peak times, court preferences, and user behavior.`,
+        cancellations: `Analyze cancellation patterns for the ${timePeriod} and predict future cancellations with risk factors.`,
+        optimization: `Provide court optimization recommendations based on booking data for the ${timePeriod}.`,
+        rankings: `Analyze player priority rankings and provide insights on user behavior and retention for the ${timePeriod}.`
+    };
+
+    return prompts[analysisType] || "Analyze the booking system data and provide insights.";
+}
+
+function parseAIResponse(response) {
+    return response.split('\n').filter(line => line.trim()).slice(0, 6);
+}
+
+function displayAIResults(results, analysisType) {
+    const container = document.getElementById('aiResults');
+    if (!container) return;
+
+    const titles = {
+        patterns: "📊 Booking Pattern Analysis",
+        cancellations: "⚠️ Cancellation Predictions",
+        optimization: "🎯 Court Optimization",
+        rankings: "🏆 Priority Rankings Analysis"
+    };
+
+    container.innerHTML = `
+        <div class="col-span-2">
+            <h4 class="font-semibold text-purple-900 mb-3">${titles[analysisType]}</h4>
+            <div class="space-y-2">
+                ${results.map(result => `
+                    <div class="flex items-start space-x-2">
+                        <span class="text-purple-500 mt-1">•</span>
+                        <p class="text-sm text-purple-700">${result}</p>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+}
+
+function generateSampleBookings() {
+    const sampleBookings = [
+        { id: Date.now().toString() + '1', date: '2026-04-25', time: '08:00-09:00', court: 'Court A', player: 'Alice Johnson', shareSlot: false, status: 'confirmed' },
+        { id: Date.now().toString() + '2', date: '2026-04-25', time: '10:00-11:00', court: 'Court B', player: 'Bob Smith', shareSlot: true, status: 'confirmed' },
+        { id: Date.now().toString() + '3', date: '2026-04-25', time: '14:00-15:00', court: 'Court C', player: 'Carol Davis', shareSlot: false, status: 'confirmed' },
+        { id: Date.now().toString() + '4', date: '2026-04-25', time: '16:00-17:00', court: 'Court D', player: 'David Wilson', shareSlot: true, status: 'confirmed' },
+        { id: Date.now().toString() + '5', date: '2026-04-26', time: '09:00-10:00', court: 'Court A', player: 'Eva Brown', shareSlot: false, status: 'confirmed' }
+    ];
+
+    if (isDemoMode) {
+        bookings.push(...sampleBookings);
+    } else {
+        sampleBookings.forEach(booking => {
+            puter.kv.set(`booking_${booking.id}`, booking);
+        });
+    }
+
+    showAlert('Sample bookings generated!', 'success');
+    loadBookingEditor();
+    loadCurrentBookings();
+    loadStats();
+}
+
+function simulateCancellations() {
+    if (bookings.length === 0) {
+        showAlert('No bookings to cancel. Generate sample bookings first.', 'warning');
+        return;
+    }
+
+    const bookingsToCancel = bookings.slice(0, Math.min(2, bookings.length));
+    
+    bookingsToCancel.forEach(booking => {
+        booking.status = 'cancelled';
+        booking.cancellationTime = new Date().toISOString();
+    });
+
+    showAlert(`${bookingsToCancel.length} bookings cancelled for demo!`, 'success');
+    loadBookingEditor();
+    loadCurrentBookings();
+    loadStats();
+}
+
+function resetDemoData() {
+    if (!confirm('Are you sure you want to reset all demo data? This will clear all bookings, test users, and settings.')) {
+        return;
+    }
+
+    bookings = [];
+    matchmakingSlots = [];
+    testUsers = [];
+    priorityScores = {};
+
+    showAlert('All demo data reset!', 'success');
+    
+    // Reload all admin sections
+    loadAdminControls();
+    loadStats();
+    loadPriorityScores();
+    loadRecentActivity();
 }

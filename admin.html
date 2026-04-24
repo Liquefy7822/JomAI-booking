@@ -122,21 +122,149 @@
         <!-- Charts Section -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
             <div class="bg-white rounded-lg shadow p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-6">Booking Trends</h3>
-                <canvas id="bookingChart" width="400" height="200"></canvas>
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Booking Trends</h3>
+                <div class="h-48">
+                    <canvas id="bookingChart"></canvas>
+                </div>
             </div>
 
             <div class="bg-white rounded-lg shadow p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-6">Court Utilization</h3>
-                <canvas id="utilizationChart" width="400" height="200"></canvas>
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Court Utilization</h3>
+                <div class="h-48">
+                    <canvas id="utilizationChart"></canvas>
+                </div>
             </div>
         </div>
 
-        <!-- AI Insights -->
+        <!-- Admin Controls Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
+            <!-- Booking Data Editor -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">📝 Edit Booking Data</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Select Booking</label>
+                        <select id="editBookingSelect" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Choose a booking to edit</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Player Name</label>
+                        <input type="text" id="editPlayerName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Court</label>
+                        <select id="editCourt" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="Court A">Court A</option>
+                            <option value="Court B">Court B</option>
+                            <option value="Court C">Court C</option>
+                            <option value="Court D">Court D</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                        <select id="editStatus" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="confirmed">Confirmed</option>
+                            <option value="cancelled">Cancelled</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="saveBookingEdit()" class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">
+                            Save Changes
+                        </button>
+                        <button onclick="deleteBooking()" class="flex-1 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Test User Management -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">👥 Test User Management</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">User Name</label>
+                        <input type="text" id="testUserName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter test user name">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Priority Score (0-100)</label>
+                        <input type="number" id="testUserScore" min="0" max="100" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="85">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Behavior Profile</label>
+                        <select id="testUserProfile" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="reliable">Reliable (low cancellations)</option>
+                            <option value="occasional">Occasional canceller</option>
+                            <option value="frequent">Frequent canceller</option>
+                            <option value="new">New player</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Booking History</label>
+                        <input type="number" id="testUserBookings" min="0" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="12">
+                    </div>
+                    <button onclick="addTestUser()" class="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700">
+                        Add Test User
+                    </button>
+                    <div class="border-t pt-3">
+                        <h4 class="text-sm font-medium text-gray-700 mb-2">Current Test Users</h4>
+                        <div id="testUsersList" class="space-y-2 max-h-32 overflow-y-auto">
+                            <!-- Test users will be listed here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Demo Controls -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">🤖 AI Demo Controls</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">AI Analysis Type</label>
+                        <select id="aiAnalysisType" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="patterns">Booking Patterns</option>
+                            <option value="cancellations">Cancellation Predictions</option>
+                            <option value="optimization">Court Optimization</option>
+                            <option value="rankings">Priority Rankings</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Time Period</label>
+                        <select id="aiTimePeriod" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="week">Last Week</option>
+                            <option value="month">Last Month</option>
+                            <option value="quarter">Last Quarter</option>
+                            <option value="all">All Time</option>
+                        </select>
+                    </div>
+                    <button onclick="runAIAnalysis()" class="w-full bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700">
+                        Run AI Analysis
+                    </button>
+                    <div class="border-t pt-3">
+                        <h4 class="text-sm font-medium text-gray-700 mb-2">Quick Actions</h4>
+                        <div class="space-y-2">
+                            <button onclick="generateSampleBookings()" class="w-full bg-gray-600 text-white py-1 px-3 rounded text-sm hover:bg-gray-700">
+                                Generate Sample Bookings
+                            </button>
+                            <button onclick="simulateCancellations()" class="w-full bg-orange-600 text-white py-1 px-3 rounded text-sm hover:bg-orange-700">
+                                Simulate Cancellations
+                            </button>
+                            <button onclick="resetDemoData()" class="w-full bg-red-600 text-white py-1 px-3 rounded text-sm hover:bg-red-700">
+                                Reset All Demo Data
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Results Display -->
         <div class="bg-purple-50 border border-purple-200 rounded-lg p-6 mt-8">
-            <h3 class="text-lg font-semibold text-purple-900 mb-4">🤖 AI Insights</h3>
-            <div id="aiInsights" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="text-purple-700 text-sm">Analyzing booking patterns...</div>
+            <h3 class="text-lg font-semibold text-purple-900 mb-4">🤖 AI Analysis Results</h3>
+            <div id="aiResults" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="text-purple-700 text-sm">Select an analysis type and click "Run AI Analysis" to see results</div>
             </div>
         </div>
     </main>
