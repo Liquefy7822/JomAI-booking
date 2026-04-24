@@ -1,5 +1,188 @@
 /* Custom styles for JomAI Badminton Booking System */
 
+/* Dark mode variables */
+:root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --bg-tertiary: #f3f4f6;
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --text-tertiary: #9ca3af;
+    --border-primary: #e5e7eb;
+    --border-secondary: #d1d5db;
+    --accent-primary: #3b82f6;
+    --accent-secondary: #10b981;
+    --accent-warning: #f59e0b;
+    --accent-danger: #ef4444;
+    --accent-purple: #8b5cf6;
+}
+
+/* Dark mode colors */
+[data-theme="dark"] {
+    --bg-primary: #1f2937;
+    --bg-secondary: #111827;
+    --bg-tertiary: #374151;
+    --text-primary: #f9fafb;
+    --text-secondary: #d1d5db;
+    --text-tertiary: #9ca3af;
+    --border-primary: #374151;
+    --border-secondary: #4b5563;
+    --accent-primary: #60a5fa;
+    --accent-secondary: #34d399;
+    --accent-warning: #fbbf24;
+    --accent-danger: #f87171;
+    --accent-purple: #a78bfa;
+}
+
+/* Dark mode base styles */
+[data-theme="dark"] body {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .bg-white {
+    background-color: var(--bg-primary) !important;
+}
+
+[data-theme="dark"] .bg-gray-50 {
+    background-color: var(--bg-secondary) !important;
+}
+
+[data-theme="dark"] .bg-gray-100 {
+    background-color: var(--bg-tertiary) !important;
+}
+
+[data-theme="dark"] .text-gray-900 {
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .text-gray-800 {
+    color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .text-gray-700 {
+    color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .text-gray-600 {
+    color: var(--text-tertiary) !important;
+}
+
+[data-theme="dark"] .text-gray-500 {
+    color: var(--text-tertiary) !important;
+}
+
+[data-theme="dark"] .border-gray-200 {
+    border-color: var(--border-primary) !important;
+}
+
+[data-theme="dark"] .border-gray-300 {
+    border-color: var(--border-secondary) !important;
+}
+
+/* Dark mode form elements */
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border-color: var(--border-secondary);
+}
+
+[data-theme="dark"] input:focus,
+[data-theme="dark"] select:focus,
+[data-theme="dark"] textarea:focus {
+    border-color: var(--accent-primary);
+    background-color: var(--bg-tertiary);
+}
+
+/* Dark mode buttons */
+[data-theme="dark"] .bg-blue-600 {
+    background-color: var(--accent-primary) !important;
+}
+
+[data-theme="dark"] .bg-blue-100 {
+    background-color: rgba(96, 165, 250, 0.2) !important;
+}
+
+[data-theme="dark"] .text-blue-800 {
+    color: var(--accent-primary) !important;
+}
+
+[data-theme="dark"] .bg-green-600 {
+    background-color: var(--accent-secondary) !important;
+}
+
+[data-theme="dark"] .bg-green-100 {
+    background-color: rgba(52, 211, 153, 0.2) !important;
+}
+
+[data-theme="dark"] .text-green-800 {
+    color: var(--accent-secondary) !important;
+}
+
+[data-theme="dark"] .bg-yellow-100 {
+    background-color: rgba(251, 191, 36, 0.2) !important;
+}
+
+[data-theme="dark"] .text-yellow-800 {
+    color: var(--accent-warning) !important;
+}
+
+[data-theme="dark"] .bg-purple-100 {
+    background-color: rgba(167, 139, 250, 0.2) !important;
+}
+
+[data-theme="dark"] .text-purple-800 {
+    color: var(--accent-purple) !important;
+}
+
+[data-theme="dark"] .bg-purple-50 {
+    background-color: rgba(167, 139, 250, 0.1) !important;
+}
+
+[data-theme="dark"] .text-purple-900 {
+    color: var(--accent-purple) !important;
+}
+
+[data-theme="dark"] .text-purple-700 {
+    color: #c4b5fd !important;
+}
+
+/* Dark mode hover states */
+[data-theme="dark"] .hover\:bg-gray-50:hover {
+    background-color: var(--bg-tertiary) !important;
+}
+
+[data-theme="dark"] .hover\:bg-gray-100:hover {
+    background-color: var(--bg-tertiary) !important;
+}
+
+[data-theme="dark"] .hover\:bg-blue-700:hover {
+    background-color: #2563eb !important;
+}
+
+[data-theme="dark"] .hover\:bg-green-700:hover {
+    background-color: #059669 !important;
+}
+
+[data-theme="dark"] .hover\:bg-yellow-200:hover {
+    background-color: rgba(251, 191, 36, 0.3) !important;
+}
+
+[data-theme="dark"] .hover\:bg-purple-700:hover {
+    background-color: #7c3aed !important;
+}
+
+/* Dark mode shadow */
+[data-theme="dark"] .shadow {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="dark"] .shadow-sm {
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3) !important;
+}
+
 /* Fade in animation */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }

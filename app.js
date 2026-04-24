@@ -3,6 +3,7 @@
 
 // Global state
 let isDemoMode = false;
+let isDarkMode = false;
 let currentUser = null;
 let bookings = [];
 let matchmakingSlots = [];
@@ -66,6 +67,9 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 async function initializeApp() {
     try {
+        // Load saved preferences
+        loadUserPreferences();
+        
         // Try to initialize Puter
         if (window.puter) {
             await puter.auth.signIn();
@@ -124,10 +128,73 @@ function loadCurrentPage() {
     }
 }
 
+// Dark mode functions
+function toggleDarkMode() {
+    isDarkMode = !isDarkMode;
+    updateDarkModeUI();
+    saveUserPreferences();
+}
+
+function updateDarkModeUI() {
+    const body = document.body;
+    const darkModeIcon = document.getElementById('darkModeIcon');
+    
+    if (isDarkMode) {
+        body.setAttribute('data-theme', 'dark');
+        if (darkModeIcon) darkModeIcon.textContent = '☀️';
+    } else {
+        body.removeAttribute('data-theme');
+        if (darkModeIcon) darkModeIcon.textContent = '🌙';
+    }
+    
+    // Update charts for dark mode
+    updateChartsTheme();
+}
+
+function loadUserPreferences() {
+    // Load preferences from localStorage
+    const savedDarkMode = localStorage.getItem('darkMode');
+    const savedDemoMode = localStorage.getItem('demoMode');
+    
+    if (savedDarkMode !== null) {
+        isDarkMode = savedDarkMode === 'true';
+        updateDarkModeUI();
+    }
+    
+    if (savedDemoMode !== null) {
+        isDemoMode = savedDemoMode === 'true';
+        updateDemoModeUI();
+    }
+}
+
+function saveUserPreferences() {
+    localStorage.setItem('darkMode', isDarkMode.toString());
+    localStorage.setItem('demoMode', isDemoMode.toString());
+}
+
+function updateChartsTheme() {
+    // Update chart colors for dark mode
+    const textColor = isDarkMode ? '#f9fafb' : '#111827';
+    const gridColor = isDarkMode ? '#374151' : '#e5e7eb';
+    
+    // Update existing charts
+    Chart.defaults.color = textColor;
+    Chart.defaults.borderColor = gridColor;
+    
+    // Re-render charts if they exist
+    if (window.bookingChart) {
+        window.bookingChart.update();
+    }
+    if (window.utilizationChart) {
+        window.utilizationChart.update();
+    }
+}
+
 // Demo mode functions
 function toggleDemoMode() {
     isDemoMode = !isDemoMode;
     updateDemoModeUI();
+    saveUserPreferences();
     loadCurrentPage();
 }
 
@@ -533,10 +600,17 @@ function loadRecentActivity() {
 }
 
 function loadCharts() {
+    // Set initial chart colors based on theme
+    const textColor = isDarkMode ? '#f9fafb' : '#111827';
+    const gridColor = isDarkMode ? '#374151' : '#e5e7eb';
+    
+    Chart.defaults.color = textColor;
+    Chart.defaults.borderColor = gridColor;
+
     // Booking trends chart
     const bookingCtx = document.getElementById('bookingChart');
     if (bookingCtx) {
-        new Chart(bookingCtx, {
+        window.bookingChart = new Chart(bookingCtx, {
             type: 'line',
             data: {
                 labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -579,7 +653,7 @@ function loadCharts() {
     // Court utilization chart
     const utilizationCtx = document.getElementById('utilizationChart');
     if (utilizationCtx) {
-        new Chart(utilizationCtx, {
+        window.utilizationChart = new Chart(utilizationCtx, {
             type: 'doughnut',
             data: {
                 labels: ['Court A', 'Court B', 'Court C', 'Court D'],
