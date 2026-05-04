@@ -1,166 +1,276 @@
-# JomAI Badminton Court Booking System
+# JomAI Badminton Court Booking System with Face Recognition
 
-A modern badminton court booking system with AI-powered features and matchmaking capabilities.
+A modern badminton court booking system featuring face recognition verification, secure payments, and comprehensive admin management.
 
-## Features
+## 🚀 Features
 
-### User-Facing Features
-- **Court Booking**: Easy-to-use interface for booking badminton courts
-- **Matchmaking Board**: Find players to share courts with or post available slots
-- **Last-Minute Deals**: Get discounted rates for cancelled slots
-- **AI Suggestions**: Smart recommendations for optimal booking times
+### **Three Distinct Modes**
 
-### Behind-the-Scenes Features
-- **Priority Scoring**: Intelligent player scoring based on booking history and behavior
-- **Smart Suggestions**: AI-powered recommendations for nearby courts when preferred courts are full
-- **Real-time Analytics**: Admin dashboard with booking trends and court utilization
+#### 1. **User Interface Mode**
+- **Court Booking**: Select from 4 different courts with varying price points
+- **Real-time Availability**: See available time slots and court status
+- **Secure Payment**: Integrated fake payment system (Credit Card, Debit Card, PayPal)
+- **Face Registration**: Capture and store facial data for verification
+- **Order Summary**: Real-time pricing and booking details
 
-## Technology Stack
+#### 2. **Face Checker Mode**
+- **Live Face Scanning**: Real-time camera-based face detection
+- **Booking Verification**: Match faces with registered bookings
+- **Today's Schedule**: View all bookings for current day
+- **Verification Log**: Track all verification attempts and results
+- **Status Management**: Mark bookings as verified, failed, or pending
 
+#### 3. **Admin Panel Mode**
+- **Booking Management**: View, edit, and cancel all bookings
+- **Face Data Control**: Manage stored facial recognition data
+- **Analytics Dashboard**: Track revenue, verification rates, and usage
+- **Export Functions**: Download booking data and generate reports
+- **System Controls**: Clear data, generate reports, export information
+
+### **Core Technologies**
 - **Frontend**: HTML5 + CSS3 + JavaScript (ES6+)
-- **AI**: Puter.js (GPT-4o, free tier)
-- **Backend**: Puter.js (KV store + file system)
-- **Styling**: TailwindCSS
-- **Charts**: Chart.js
-- **Hosting**: Netlify (free, drag-and-drop deployment)
+- **Face Recognition**: Browser-based camera integration
+- **Styling**: TailwindCSS with dark mode support
+- **Storage**: Local storage for demo purposes
+- **Payment**: Simulated payment processing
 
-## Quick Start
+## 📋 System Requirements
 
-### Demo Mode
-The application automatically runs in demo mode if Puter.js is not available. This includes:
-- Mock booking data
-- Sample matchmaking slots
-- Simulated AI suggestions
-- Pre-populated admin dashboard
-
-### Live Mode (with Puter.js)
-1. Create a free account at [puter.ai](https://puter.ai)
-2. The app will automatically detect Puter.js and switch to live mode
-3. All data will be persisted to your Puter storage
-
-## File Structure
-
-```
-/project
-├── index.html          # Main booking page
-├── matchmaking.html    # Matchmaking board
-├── admin.html         # Admin dashboard
-├── style.css          # Custom styles
-├── app.js             # Main application logic
-└── README.md          # This file
-```
-
-## Deployment
-
-### Netlify (Recommended)
-1. Drag and drop the entire project folder to [Netlify Drop](https://app.netlify.com/drop)
-2. Your site will be live instantly at a random URL
-3. Optional: Add a custom domain
-
-### Other Static Hosting
-The app works with any static hosting service that supports:
-- HTML/CSS/JavaScript files
-- HTTPS (required for Puter.js)
-
-## Usage
-
-### For Users
-1. **Book a Court**: Select date, time, and preferred court
-2. **Enable Sharing**: Toggle "Open to sharing" to find playing partners
-3. **Check Matchmaking**: Browse available slots posted by other players
-4. **Grab Deals**: Look for last-minute cancellations with discounts
-
-### For Admins
-1. **Monitor Activity**: View booking trends and court utilization
-2. **Manage Priority Scores**: See player rankings and access levels
-3. **AI Insights**: Get actionable recommendations for court management
-4. **Track Cancellations**: Monitor patterns and optimize scheduling
-
-## API Integration
-
-### Puter.js Features Used
-- **AI Chat**: `puter.ai.chat()` for smart suggestions
-- **KV Storage**: `puter.kv.set/get/delete()` for data persistence
-- **Authentication**: `puter.auth.signIn()` for user management
-
-### Data Storage Structure
-```
-booking_[id]        # Court bookings
-matchmaking_[id]    # Available slots for sharing
-priority_scores     # Player priority rankings
-```
-
-## Customization
-
-### Adding Courts
-Edit the `getAvailableCourts()` function in `app.js` to add more courts.
-
-### Time Slots
-Modify the time slot options in the HTML select elements.
-
-### Styling
-Customize colors and layouts in `style.css` or modify TailwindCSS classes.
-
-## Troubleshooting
-
-### Demo Mode Not Working
-- Check browser console for JavaScript errors
-- Ensure all files are in the same directory
-- Verify TailwindCSS CDN is accessible
-
-### Puter.js Issues
-- Make sure you're logged into Puter.ai
-- Check network connectivity
-- Verify API key permissions
-
-### Mobile Responsiveness
-- Test on different screen sizes
-- Adjust breakpoints in TailwindCSS classes if needed
-
-## Security Notes
-
-- No sensitive data is stored locally
-- All user data is handled through Puter.js secure storage
-- Demo mode uses only mock data
-- No API keys or credentials in the codebase
-
-## Performance
-
-- Lightweight JavaScript (~15KB minified)
-- Minimal external dependencies
-- Fast loading with CDN resources
-- Efficient DOM manipulation
-
-## Browser Support
-
+### **Browser Requirements**
 - Chrome 60+
 - Firefox 55+
 - Safari 12+
 - Edge 79+
 
-## Contributing
+### **Hardware Requirements**
+- **Camera**: Required for face registration and verification
+- **Microphone**: Optional (for future voice features)
+- **Modern Device**: Recommended for best performance
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly in both demo and live modes
-5. Submit a pull request
+## 🛠️ Installation & Setup
 
-## License
+### **Quick Start**
+1. Download the project files
+2. Open `index.html` in a modern web browser
+3. Allow camera permissions when prompted
+4. Start using the system immediately
 
-MIT License - feel free to use for commercial or personal projects.
+### **Local Development**
+```bash
+# Clone or download the project
+cd JomAI-booking
 
-## Support
+# Start a local server (optional)
+python -m http.server 8000
+# or
+npx serve .
 
-For issues related to:
-- **Puter.js**: Contact Puter.ai support
-- **Hosting**: Check your hosting provider's documentation
-- **Code**: Open an issue in the project repository
+# Open http://localhost:8000
+```
+
+### **Production Deployment**
+1. Upload all files to your web server
+2. Ensure HTTPS is enabled (required for camera access)
+3. Configure camera permissions if needed
+
+## 🎯 How to Use
+
+### **For Players (User Interface)**
+
+1. **Select a Court**
+   - Browse available courts (Court A-D)
+   - View pricing and features
+   - Click to select preferred court
+
+2. **Choose Date & Time**
+   - Select booking date
+   - Choose available time slot
+   - View real-time pricing
+
+3. **Enter Personal Information**
+   - Full name
+   - Email address
+   - Phone number
+
+4. **Payment Processing**
+   - Select payment method (demo mode)
+   - Complete secure payment
+   - Receive confirmation
+
+5. **Face Registration**
+   - Click "Capture Face"
+   - Allow camera access
+   - Position face in frame
+   - Capture and store facial data
+
+### **For Staff (Face Checker)**
+
+1. **Start Face Scanner**
+   - Click "Start Scanning"
+   - Allow camera access
+   - Position camera for face detection
+
+2. **Verify Bookings**
+   - View today's bookings list
+   - Click "Verify" for each booking
+   - System matches face with registered data
+   - Confirm or deny verification
+
+3. **Monitor Status**
+   - View verification results
+   - Check verification log
+   - Track success/failure rates
+
+### **For Administrators (Admin Panel)**
+
+1. **Monitor Bookings**
+   - View all current bookings
+   - Check payment and verification status
+   - Cancel problematic bookings
+
+2. **Manage Face Data**
+   - View registered face data
+   - Delete old or invalid data
+   - Monitor data storage
+
+3. **Generate Reports**
+   - Daily revenue reports
+   - Verification statistics
+   - Export booking data
+
+4. **System Maintenance**
+   - Clear face data storage
+   - Export backup data
+   - Monitor system health
+
+## 🔧 Technical Architecture
+
+### **Data Flow**
+```
+User Registration → Face Capture → Payment → Booking Creation → Face Database
+                                                            ↓
+Face Scanner ← Face Matching ← Verification ← Face Database
+                                                            ↓
+Admin Panel ← Booking Management ← Verification Log
+```
+
+### **Security Features**
+- **Face Data Encryption**: Local storage with encryption
+- **Payment Security**: Simulated secure payment processing
+- **Access Control**: Mode-based access restrictions
+- **Data Privacy**: Local storage only (no external servers)
+
+### **Face Recognition Process**
+1. **Registration**: High-quality face capture during booking
+2. **Storage**: Encrypted local storage of face data
+3. **Verification**: Real-time face matching during check-in
+4. **Logging**: Complete audit trail of all verifications
+
+## 📊 Pricing Structure
+
+| Court | Type | Price/Hour |
+|-------|------|------------|
+| Court A | Premium | $20 |
+| Court B | Standard | $15 |
+| Court C | Standard | $15 |
+| Court D | Budget | $10 |
+
+## 🎨 Features & Customization
+
+### **Dark Mode**
+- Toggle between light and dark themes
+- Persistent user preferences
+- Optimized for all lighting conditions
+
+### **Responsive Design**
+- Mobile-friendly interface
+- Tablet optimization
+- Desktop full-featured experience
+
+### **Accessibility**
+- Screen reader support
+- Keyboard navigation
+- High contrast options
+- Multi-language ready
+
+## 🔍 Troubleshooting
+
+### **Common Issues**
+
+**Camera Not Working**
+- Check browser permissions
+- Ensure HTTPS connection
+- Try different browser
+- Check camera hardware
+
+**Face Recognition Failing**
+- Ensure good lighting
+- Position face clearly in frame
+- Remove glasses/hats if possible
+- Recapture face data if needed
+
+**Payment Issues**
+- Check payment method selection
+- Ensure all fields are filled
+- Try different payment method
+- Contact admin if persistent
+
+### **Performance Optimization**
+- Use modern browser
+- Ensure good internet connection
+- Clear browser cache regularly
+- Update browser to latest version
+
+## 🚀 Future Enhancements
+
+### **Planned Features**
+- **Mobile App**: Native iOS/Android applications
+- **Advanced Analytics**: AI-powered usage insights
+- **Multi-court Support**: Chain management system
+- **Integration**: Calendar and payment gateway integration
+- **Voice Recognition**: Additional verification method
+- **QR Codes**: Alternative check-in method
+
+### **Technical Improvements**
+- **Server-side Processing**: Real database integration
+- **Advanced AI**: Machine learning for face recognition
+- **Real-time Updates**: WebSocket for live updates
+- **API Integration**: Third-party service connections
+- **Cloud Storage**: Secure cloud-based data storage
+
+## 📞 Support
+
+### **Documentation**
+- Complete user manual
+- Technical documentation
+- API reference (future)
+- Troubleshooting guide
+
+### **Contact**
+- For technical issues: Check troubleshooting section
+- For feature requests: Use admin panel feedback
+- For emergencies: Contact system administrator
+
+## 📄 License
+
+MIT License - Free for commercial and personal use.
+
+## 🏸 About JomAI
+
+JomAI Badminton Court Booking System is designed to modernize court management with cutting-edge face recognition technology. Our system ensures secure, efficient, and user-friendly court booking experiences for players and staff alike.
+
+**Key Benefits:**
+- ✅ Secure face-based verification
+- ✅ Streamlined booking process
+- ✅ Comprehensive admin tools
+- ✅ Real-time analytics
+- ✅ Mobile-friendly design
+- ✅ Dark mode support
+
+Perfect for badminton centers, sports facilities, and recreational centers looking to modernize their booking systems with advanced technology.
 
 ---
 
-**Hackathon Tips:**
-- Pre-login to Puter.ai before presenting
-- Have demo mode ready as backup
-- Focus on the AI matchmaking and priority scoring features
-- Show the admin dashboard for data insights
+**Version**: 2.0  
+**Last Updated**: 2026  
+**Compatibility**: Modern browsers with camera support

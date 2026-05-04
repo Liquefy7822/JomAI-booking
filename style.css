@@ -1,4 +1,4 @@
-/* Custom styles for JomAI Badminton Booking System */
+/* JomAI Badminton Court Booking System - Complete CSS */
 
 /* Dark mode variables */
 :root {
@@ -46,8 +46,7 @@
 
 /* Force all elements to use dark mode */
 [data-theme="dark"] * {
-    background-color: inherit !important;
-    color: inherit !important;
+    background-color: transparent !important;
 }
 
 /* Override specific problematic elements */
@@ -90,6 +89,10 @@
     background-color: rgba(251, 191, 36, 0.1) !important;
 }
 
+[data-theme="dark"] .bg-purple-50 {
+    background-color: rgba(167, 139, 250, 0.1) !important;
+}
+
 /* Text colors */
 [data-theme="dark"] .text-gray-900 {
     color: var(--text-primary) !important;
@@ -115,54 +118,6 @@
     color: var(--text-tertiary) !important;
 }
 
-[data-theme="dark"] .text-blue-900 {
-    color: var(--accent-primary) !important;
-}
-
-[data-theme="dark"] .text-blue-700 {
-    color: var(--accent-primary) !important;
-}
-
-[data-theme="dark"] .text-blue-600 {
-    color: var(--accent-primary) !important;
-}
-
-[data-theme="dark"] .text-green-900 {
-    color: var(--accent-secondary) !important;
-}
-
-[data-theme="dark"] .text-green-700 {
-    color: var(--accent-secondary) !important;
-}
-
-[data-theme="dark"] .text-green-600 {
-    color: var(--accent-secondary) !important;
-}
-
-[data-theme="dark"] .text-red-900 {
-    color: var(--accent-danger) !important;
-}
-
-[data-theme="dark"] .text-red-700 {
-    color: var(--accent-danger) !important;
-}
-
-[data-theme="dark"] .text-red-600 {
-    color: var(--accent-danger) !important;
-}
-
-[data-theme="dark"] .text-yellow-900 {
-    color: var(--accent-warning) !important;
-}
-
-[data-theme="dark"] .text-yellow-700 {
-    color: var(--accent-warning) !important;
-}
-
-[data-theme="dark"] .text-yellow-600 {
-    color: var(--accent-warning) !important;
-}
-
 /* Border colors */
 [data-theme="dark"] .border-gray-200 {
     border-color: var(--border-primary) !important;
@@ -170,22 +125,6 @@
 
 [data-theme="dark"] .border-gray-300 {
     border-color: var(--border-secondary) !important;
-}
-
-[data-theme="dark"] .border-blue-300 {
-    border-color: var(--accent-primary) !important;
-}
-
-[data-theme="dark"] .border-green-300 {
-    border-color: var(--accent-secondary) !important;
-}
-
-[data-theme="dark"] .border-red-300 {
-    border-color: var(--accent-danger) !important;
-}
-
-[data-theme="dark"] .border-yellow-300 {
-    border-color: var(--accent-warning) !important;
 }
 
 [data-theme="dark"] .border {
@@ -241,12 +180,32 @@
     color: var(--accent-secondary) !important;
 }
 
+[data-theme="dark"] .bg-red-600 {
+    background-color: var(--accent-danger) !important;
+}
+
+[data-theme="dark"] .bg-red-100 {
+    background-color: rgba(248, 113, 113, 0.2) !important;
+}
+
+[data-theme="dark"] .text-red-800 {
+    color: var(--accent-danger) !important;
+}
+
+[data-theme="dark"] .bg-yellow-600 {
+    background-color: var(--accent-warning) !important;
+}
+
 [data-theme="dark"] .bg-yellow-100 {
     background-color: rgba(251, 191, 36, 0.2) !important;
 }
 
 [data-theme="dark"] .text-yellow-800 {
     color: var(--accent-warning) !important;
+}
+
+[data-theme="dark"] .bg-purple-600 {
+    background-color: var(--accent-purple) !important;
 }
 
 [data-theme="dark"] .bg-purple-100 {
@@ -257,18 +216,6 @@
     color: var(--accent-purple) !important;
 }
 
-[data-theme="dark"] .bg-purple-50 {
-    background-color: rgba(167, 139, 250, 0.1) !important;
-}
-
-[data-theme="dark"] .text-purple-900 {
-    color: var(--accent-purple) !important;
-}
-
-[data-theme="dark"] .text-purple-700 {
-    color: #c4b5fd !important;
-}
-
 /* Dark mode hover states */
 [data-theme="dark"] .hover\:bg-gray-50:hover {
     background-color: var(--bg-tertiary) !important;
@@ -276,62 +223,6 @@
 
 [data-theme="dark"] .hover\:bg-gray-100:hover {
     background-color: var(--bg-tertiary) !important;
-}
-
-[data-theme="dark"] .hover\:bg-gray-200:hover {
-    background-color: var(--bg-tertiary) !important;
-}
-
-[data-theme="dark"] .hover\:bg-blue-50:hover {
-    background-color: rgba(96, 165, 250, 0.2) !important;
-}
-
-[data-theme="dark"] .hover\:bg-blue-100:hover {
-    background-color: rgba(96, 165, 250, 0.3) !important;
-}
-
-[data-theme="dark"] .hover\:bg-blue-200:hover {
-    background-color: rgba(96, 165, 250, 0.4) !important;
-}
-
-[data-theme="dark"] .hover\:bg-green-50:hover {
-    background-color: rgba(52, 211, 153, 0.2) !important;
-}
-
-[data-theme="dark"] .hover\:bg-green-100:hover {
-    background-color: rgba(52, 211, 153, 0.3) !important;
-}
-
-[data-theme="dark"] .hover\:bg-red-50:hover {
-    background-color: rgba(248, 113, 113, 0.2) !important;
-}
-
-[data-theme="dark"] .hover\:bg-red-100:hover {
-    background-color: rgba(248, 113, 113, 0.3) !important;
-}
-
-[data-theme="dark"] .hover\:bg-yellow-50:hover {
-    background-color: rgba(251, 191, 36, 0.2) !important;
-}
-
-[data-theme="dark"] .hover\:bg-yellow-100:hover {
-    background-color: rgba(251, 191, 36, 0.3) !important;
-}
-
-[data-theme="dark"] .hover\:bg-yellow-200:hover {
-    background-color: rgba(251, 191, 36, 0.4) !important;
-}
-
-[data-theme="dark"] .hover\:bg-purple-50:hover {
-    background-color: rgba(167, 139, 250, 0.2) !important;
-}
-
-[data-theme="dark"] .hover\:bg-purple-100:hover {
-    background-color: rgba(167, 139, 250, 0.3) !important;
-}
-
-[data-theme="dark"] .hover\:bg-purple-200:hover {
-    background-color: rgba(167, 139, 250, 0.4) !important;
 }
 
 [data-theme="dark"] .hover\:bg-blue-700:hover {
@@ -354,131 +245,217 @@
     background-color: #7c3aed !important;
 }
 
-[data-theme="dark"] .hover\:bg-gray-700:hover {
-    background-color: #374151 !important;
+/* Dark mode shadow */
+[data-theme="dark"] .shadow {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.3) !important;
 }
 
-/* Dark mode specific element fixes */
-[data-theme="dark"] .court-card {
-    background-color: var(--bg-primary) !important;
-    border-color: var(--border-primary) !important;
+[data-theme="dark"] .shadow-lg {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3) !important;
 }
 
-[data-theme="dark"] .court-card:hover {
-    background-color: var(--bg-tertiary) !important;
+/* Custom component styles */
+.court-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
 }
 
-[data-theme="dark"] .booking-card {
-    background-color: var(--bg-primary) !important;
-    border-color: var(--border-primary) !important;
+.court-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
-[data-theme="dark"] .booking-card:hover {
-    background-color: var(--bg-tertiary) !important;
-}
-
-[data-theme="dark"] .matchmaking-card {
-    background-color: var(--bg-primary) !important;
-    border-color: var(--border-primary) !important;
-}
-
-[data-theme="dark"] .matchmaking-card:hover {
-    background-color: var(--bg-tertiary) !important;
-}
-
-/* Fix the yellow cancellation alerts card */
-[data-theme="dark"] .bg-yellow-50 {
-    background-color: var(--bg-primary) !important;
-    border-color: var(--border-primary) !important;
-}
-
-[data-theme="dark"] .border-yellow-300 {
-    border-color: var(--border-primary) !important;
-}
-
-[data-theme="dark"] .text-yellow-900 {
-    color: var(--text-primary) !important;
-}
-
-[data-theme="dark"] .text-yellow-700 {
-    color: var(--text-secondary) !important;
-}
-
-[data-theme="dark"] .text-yellow-600 {
-    color: var(--text-tertiary) !important;
-}
-
-/* Fix checkbox styling */
-[data-theme="dark"] input[type="checkbox"] {
-    background-color: var(--bg-tertiary) !important;
-    border-color: var(--border-secondary) !important;
-    color: var(--text-primary) !important;
-}
-
-[data-theme="dark"] input[type="checkbox"]:checked {
-    background-color: var(--accent-primary) !important;
+.court-card.selected {
     border-color: var(--accent-primary) !important;
+    background-color: rgba(59, 130, 246, 0.1) !important;
 }
 
-/* Fix dropdown arrows and calendar icons */
-[data-theme="dark"] select {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e") !important;
-    background-position: right 0.5rem center !important;
-    background-repeat: no-repeat !important;
-    background-size: 1.5em 1.5em !important;
-    padding-right: 2.5rem !important;
-}
-
-[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1) !important;
-}
-
-[data-theme="dark"] input[type="date"]::-webkit-inner-spin-button,
-[data-theme="dark"] input[type="date"]::-webkit-outer-spin-button {
-    filter: invert(1) !important;
-}
-
-/* Fix specific card backgrounds */
-[data-theme="dark"] .bg-white.rounded-lg.shadow {
-    background-color: var(--bg-primary) !important;
-}
-
-[data-theme="dark"] .bg-white.rounded-lg.shadow.p-6 {
-    background-color: var(--bg-primary) !important;
-}
-
-/* Fix navigation buttons */
-[data-theme="dark"] nav .bg-white {
-    background-color: var(--bg-primary) !important;
-}
-
-[data-theme="dark"] button.bg-gray-100 {
-    background-color: var(--bg-tertiary) !important;
-    color: var(--text-primary) !important;
-}
-
-[data-theme="dark"] button.bg-yellow-100 {
-    background-color: rgba(251, 191, 36, 0.2) !important;
-    color: var(--accent-warning) !important;
-}
-
-[data-theme="dark"] button.bg-blue-100 {
+[data-theme="dark"] .court-card.selected {
     background-color: rgba(96, 165, 250, 0.2) !important;
-    color: var(--accent-primary) !important;
 }
 
-[data-theme="dark"] button.bg-purple-100 {
-    background-color: rgba(167, 139, 250, 0.2) !important;
-    color: var(--accent-purple) !important;
+.mode-content {
+    animation: fadeIn 0.3s ease-out;
 }
 
-/* Force text colors for specific elements */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.booking-item {
+    transition: all 0.2s ease;
+}
+
+.booking-item:hover {
+    transform: translateX(4px);
+}
+
+.verification-success {
+    background-color: rgba(16, 185, 129, 0.1) !important;
+    border-left: 4px solid var(--accent-secondary) !important;
+}
+
+.verification-failed {
+    background-color: rgba(239, 68, 68, 0.1) !important;
+    border-left: 4px solid var(--accent-danger) !important;
+}
+
+.verification-pending {
+    background-color: rgba(245, 158, 11, 0.1) !important;
+    border-left: 4px solid var(--accent-warning) !important;
+}
+
+/* Face scanner styles */
+.face-scanner {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.face-scanner video {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.scanning-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid var(--accent-primary);
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+.scanning-overlay.scanning {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+}
+
+/* Button styles */
+.btn-primary {
+    background-color: var(--accent-primary);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: #2563eb;
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid var(--border-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background-color: var(--bg-secondary);
+    transform: translateY(-1px);
+}
+
+/* Status badges */
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-badge.verified {
+    background-color: rgba(16, 185, 129, 0.2);
+    color: var(--accent-secondary);
+}
+
+.status-badge.pending {
+    background-color: rgba(245, 158, 11, 0.2);
+    color: var(--accent-warning);
+}
+
+.status-badge.cancelled {
+    background-color: rgba(239, 68, 68, 0.2);
+    color: var(--accent-danger);
+}
+
+/* Loading spinner */
+.loading-spinner {
+    border: 2px solid var(--border-primary);
+    border-top: 2px solid var(--accent-primary);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .court-card {
+        margin-bottom: 1rem;
+    }
+    
+    .grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .grid-cols-1.lg\:grid-cols-2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Dark mode scrollbar */
+[data-theme="dark"] ::-webkit-scrollbar-track {
+    background: var(--bg-tertiary);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+    background: var(--border-secondary);
+    border-radius: 3px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+    background: var(--text-tertiary);
+}
+
+/* AGGRESSIVE DARK MODE OVERRIDES - Catch all remaining white elements */
+[data-theme="dark"] .bg-white,
+[data-theme="dark"] [class*="bg-white"],
+[data-theme="dark"] div[class*="bg-"],
+[data-theme="dark"] section[class*="bg-"] {
+    background-color: var(--bg-primary) !important;
+}
+
+/* Force all text to be readable */
 [data-theme="dark"] h1,
 [data-theme="dark"] h2,
 [data-theme="dark"] h3,
 [data-theme="dark"] h4,
 [data-theme="dark"] h5,
-[data-theme="dark"] h6 {
+[data-theme="dark"] h6,
+[data-theme="dark"] .font-bold,
+[data-theme="dark"] .font-semibold {
     color: var(--text-primary) !important;
 }
 
@@ -491,72 +468,6 @@
 [data-theme="dark"] .text-sm,
 [data-theme="dark"] .text-xs {
     color: var(--text-tertiary) !important;
-}
-
-[data-theme="dark"] .priority-score {
-    background-color: var(--bg-tertiary) !important;
-}
-
-[data-theme="dark"] .skill-badge {
-    background-color: var(--bg-tertiary) !important;
-}
-
-/* Alert styles in dark mode */
-[data-theme="dark"] .alert-success {
-    background-color: rgba(52, 211, 153, 0.2) !important;
-    color: var(--accent-secondary) !important;
-    border-color: var(--accent-secondary) !important;
-}
-
-[data-theme="dark"] .alert-warning {
-    background-color: rgba(251, 191, 36, 0.2) !important;
-    color: var(--accent-warning) !important;
-    border-color: var(--accent-warning) !important;
-}
-
-[data-theme="dark"] .alert-error {
-    background-color: rgba(248, 113, 113, 0.2) !important;
-    color: var(--accent-danger) !important;
-    border-color: var(--accent-danger) !important;
-}
-
-/* AGGRESSIVE DARK MODE OVERRIDES - Catch all remaining white elements */
-[data-theme="dark"] * {
-    background-color: transparent !important;
-}
-
-[data-theme="dark"] .bg-white,
-[data-theme="dark"] [class*="bg-white"],
-[data-theme="dark"] div[class*="bg-"],
-[data-theme="dark"] section[class*="bg-"] {
-    background-color: var(--bg-primary) !important;
-}
-
-[data-theme="dark"] .bg-gray-50,
-[data-theme="dark"] .bg-gray-100,
-[data-theme="dark"] .bg-gray-200 {
-    background-color: var(--bg-secondary) !important;
-}
-
-[data-theme="dark"] .bg-yellow-50,
-[data-theme="dark"] .bg-yellow-100 {
-    background-color: var(--bg-primary) !important;
-}
-
-/* Force all text to be readable */
-[data-theme="dark"] * {
-    color: var(--text-secondary) !important;
-}
-
-[data-theme="dark"] h1,
-[data-theme="dark"] h2,
-[data-theme="dark"] h3,
-[data-theme="dark"] h4,
-[data-theme="dark"] h5,
-[data-theme="dark"] h6,
-[data-theme="dark"] .font-bold,
-[data-theme="dark"] .font-semibold {
-    color: var(--text-primary) !important;
 }
 
 /* Override specific button backgrounds */
@@ -582,212 +493,7 @@
     background-color: var(--accent-danger) !important;
 }
 
-/* Dark mode scrollbar */
-[data-theme="dark"] ::-webkit-scrollbar-track {
-    background: var(--bg-tertiary);
-}
-
-[data-theme="dark"] ::-webkit-scrollbar-thumb {
-    background: var(--border-secondary);
-    border-radius: 3px;
-}
-
-[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
-    background: var(--text-tertiary);
-}
-
-/* Dark mode shadow */
-[data-theme="dark"] .shadow {
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.3) !important;
-}
-
-[data-theme="dark"] .shadow-sm {
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3) !important;
-}
-
-/* Fade in animation */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.fade-in {
-    animation: fadeIn 0.3s ease-out;
-}
-
-/* Court selection styles */
-.court-card {
-    transition: all 0.2s ease;
-}
-
-.court-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.court-card.selected {
-    border-color: #3b82f6;
-    background-color: #eff6ff;
-}
-
-.court-card.booked {
-    background-color: #fef2f2;
-    border-color: #ef4444;
-}
-
-/* Priority score indicator */
-.priority-score {
-    display: inline-flex;
-    align-items: center;
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: 600;
-}
-
-.priority-score.high {
-    background-color: #dcfce7;
-    color: #166534;
-}
-
-.priority-score.medium {
-    background-color: #fef3c7;
-    color: #92400e;
-}
-
-.priority-score.low {
-    background-color: #fee2e2;
-    color: #991b1b;
-}
-
-/* Booking card styles */
-.booking-card {
-    transition: all 0.2s ease;
-}
-
-.booking-card:hover {
-    transform: translateX(4px);
-}
-
-/* Slot availability indicator */
-.slot-available {
-    background-color: #10b981;
-}
-
-.slot-partial {
-    background-color: #f59e0b;
-}
-
-.slot-full {
-    background-color: #ef4444;
-}
-
-/* Loading spinner */
-.loading-spinner {
-    border: 2px solid #f3f4f6;
-    border-top: 2px solid #3b82f6;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* Alert styles */
-.alert-success {
-    background-color: #10b981;
-    color: white;
-    padding: 12px 16px;
-    border-radius: 6px;
-    margin-bottom: 16px;
-}
-
-.alert-warning {
-    background-color: #f59e0b;
-    color: white;
-    padding: 12px 16px;
-    border-radius: 6px;
-    margin-bottom: 16px;
-}
-
-.alert-error {
-    background-color: #ef4444;
-    color: white;
-    padding: 12px 16px;
-    border-radius: 6px;
-    margin-bottom: 16px;
-}
-
-/* Matchmaking card styles */
-.matchmaking-card {
-    border-left: 4px solid #3b82f6;
-    transition: all 0.2s ease;
-}
-
-.matchmaking-card:hover {
-    border-left-color: #2563eb;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-/* Skill level badges */
-.skill-badge {
-    display: inline-block;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-}
-
-.skill-badge.beginner {
-    background-color: #dbeafe;
-    color: #1e40af;
-}
-
-.skill-badge.intermediate {
-    background-color: #fef3c7;
-    color: #92400e;
-}
-
-.skill-badge.advanced {
-    background-color: #e9d5ff;
-    color: #6b21a8;
-}
-
-.skill-badge.expert {
-    background-color: #fecaca;
-    color: #991b1b;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .grid-cols-1.md\:grid-cols-2 {
-        grid-template-columns: 1fr;
-    }
-    
-    .lg\:col-span-2 {
-        grid-column: span 1;
-    }
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-    width: 6px;
-}
-
-::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
+[data-theme="dark"] button.bg-purple-600,
+[data-theme="dark"] button[class*="bg-purple-600"] {
+    background-color: var(--accent-purple) !important;
 }

@@ -3,125 +3,317 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JomAI Badminton Court Booking</title>
+    <title>JomAI Badminton Court Booking System</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://js.puter.com/v2/"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-gray-50">
-    <nav class="bg-white shadow-sm border-b">
+    <!-- Main Navigation -->
+    <nav class="bg-white shadow-lg border-b">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
-                    <h1 class="text-xl font-bold text-gray-900">🏸 JomAI Badminton</h1>
+                    <h1 class="text-2xl font-bold text-gray-900">🏸 JomAI Badminton</h1>
                 </div>
                 <div class="flex items-center space-x-4">
                     <button onclick="toggleDarkMode()" class="px-3 py-1 text-sm bg-gray-100 text-gray-800 rounded-md hover:bg-gray-200" title="Toggle dark mode">
                         <span id="darkModeIcon">🌙</span>
                     </button>
-                    <button onclick="toggleDemoMode()" class="px-3 py-1 text-sm bg-yellow-100 text-yellow-800 rounded-md hover:bg-yellow-200">
-                        <span id="demoModeText">Demo: OFF</span>
+                    <button onclick="switchMode('user')" id="userModeBtn" class="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                        User Interface
                     </button>
-                    <a href="matchmaking.html" class="px-3 py-1 text-sm bg-blue-100 text-blue-800 rounded-md hover:bg-blue-200">
-                        Matchmaking
-                    </a>
-                    <a href="admin.html" class="px-3 py-1 text-sm bg-purple-100 text-purple-800 rounded-md hover:bg-purple-200">
-                        Admin
-                    </a>
+                    <button onclick="switchMode('face')" id="faceModeBtn" class="px-4 py-2 text-sm bg-green-600 text-white rounded-md hover:bg-green-700">
+                        Face Checker
+                    </button>
+                    <button onclick="switchMode('admin')" id="adminModeBtn" class="px-4 py-2 text-sm bg-purple-600 text-white rounded-md hover:bg-purple-700">
+                        Admin Panel
+                    </button>
                 </div>
             </div>
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div class="mb-8">
-            <h2 class="text-2xl font-bold text-gray-900 mb-2">Book a Court</h2>
-            <p class="text-gray-600">Select your preferred date, time, and court</p>
-        </div>
+    <!-- User Interface Mode -->
+    <div id="userMode" class="mode-content">
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Book a Court</h2>
+                <p class="text-gray-600">Select your preferred court, time slot, and complete payment with face verification</p>
+            </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Court Selection -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">Available Courts</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="court-card border-2 border-gray-200 rounded-lg p-4 hover:border-blue-500 cursor-pointer transition" onclick="selectCourt('Court A')">
+                        <div class="text-center">
+                            <div class="text-2xl mb-2">🏸</div>
+                            <h4 class="font-semibold text-gray-900">Court A</h4>
+                            <p class="text-sm text-gray-600">Premium Court</p>
+                            <p class="text-lg font-bold text-green-600">$20/hr</p>
+                        </div>
+                    </div>
+                    <div class="court-card border-2 border-gray-200 rounded-lg p-4 hover:border-blue-500 cursor-pointer transition" onclick="selectCourt('Court B')">
+                        <div class="text-center">
+                            <div class="text-2xl mb-2">🏸</div>
+                            <h4 class="font-semibold text-gray-900">Court B</h4>
+                            <p class="text-sm text-gray-600">Standard Court</p>
+                            <p class="text-lg font-bold text-green-600">$15/hr</p>
+                        </div>
+                    </div>
+                    <div class="court-card border-2 border-gray-200 rounded-lg p-4 hover:border-blue-500 cursor-pointer transition" onclick="selectCourt('Court C')">
+                        <div class="text-center">
+                            <div class="text-2xl mb-2">🏸</div>
+                            <h4 class="font-semibold text-gray-900">Court C</h4>
+                            <p class="text-sm text-gray-600">Standard Court</p>
+                            <p class="text-lg font-bold text-green-600">$15/hr</p>
+                        </div>
+                    </div>
+                    <div class="court-card border-2 border-gray-200 rounded-lg p-4 hover:border-blue-500 cursor-pointer transition" onclick="selectCourt('Court D')">
+                        <div class="text-center">
+                            <div class="text-2xl mb-2">🏸</div>
+                            <h4 class="font-semibold text-gray-900">Court D</h4>
+                            <p class="text-sm text-gray-600">Budget Court</p>
+                            <p class="text-lg font-bold text-green-600">$10/hr</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Booking Form -->
-            <div class="lg:col-span-2">
-                <div class="bg-white rounded-lg shadow p-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Booking Details</h3>
                     <form id="bookingForm">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
-                                <input type="date" id="bookingDate" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Time Slot</label>
-                                <select id="timeSlot" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                                    <option value="">Select a time</option>
-                                    <option value="08:00-09:00">8:00 AM - 9:00 AM</option>
-                                    <option value="09:00-10:00">9:00 AM - 10:00 AM</option>
-                                    <option value="10:00-11:00">10:00 AM - 11:00 AM</option>
-                                    <option value="11:00-12:00">11:00 AM - 12:00 PM</option>
-                                    <option value="14:00-15:00">2:00 PM - 3:00 PM</option>
-                                    <option value="15:00-16:00">3:00 PM - 4:00 PM</option>
-                                    <option value="16:00-17:00">4:00 PM - 5:00 PM</option>
-                                    <option value="17:00-18:00">5:00 PM - 6:00 PM</option>
-                                    <option value="18:00-19:00">6:00 PM - 7:00 PM</option>
-                                    <option value="19:00-20:00">7:00 PM - 8:00 PM</option>
-                                    <option value="20:00-21:00">8:00 PM - 9:00 PM</option>
-                                </select>
-                            </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Selected Court</label>
+                            <input type="text" id="selectedCourt" readonly class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" placeholder="Select a court">
                         </div>
-
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Select Court</label>
-                            <div id="courtsList" class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <!-- Courts will be populated here -->
-                            </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                            <input type="date" id="bookingDate" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
                         </div>
-
-                        <div class="mb-6">
-                            <label class="flex items-center">
-                                <input type="checkbox" id="shareSlot" class="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                                <span class="text-sm text-gray-700">Open to sharing this slot with other players?</span>
-                            </label>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Time Slot</label>
+                            <select id="timeSlot" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                                <option value="">Select time</option>
+                                <option value="08:00-09:00">8:00 AM - 9:00 AM</option>
+                                <option value="09:00-10:00">9:00 AM - 10:00 AM</option>
+                                <option value="10:00-11:00">10:00 AM - 11:00 AM</option>
+                                <option value="11:00-12:00">11:00 AM - 12:00 PM</option>
+                                <option value="14:00-15:00">2:00 PM - 3:00 PM</option>
+                                <option value="15:00-16:00">3:00 PM - 4:00 PM</option>
+                                <option value="16:00-17:00">4:00 PM - 5:00 PM</option>
+                                <option value="17:00-18:00">5:00 PM - 6:00 PM</option>
+                                <option value="18:00-19:00">6:00 PM - 7:00 PM</option>
+                                <option value="19:00-20:00">7:00 PM - 8:00 PM</option>
+                                <option value="20:00-21:00">8:00 PM - 9:00 PM</option>
+                            </select>
                         </div>
-
-                        <div class="mb-6">
+                        <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Your Name</label>
-                            <input type="text" id="playerName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            <input type="text" id="playerName" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
                         </div>
-
-                        <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            Book Court
-                        </button>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                            <input type="email" id="playerEmail" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+                            <input type="tel" id="playerPhone" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                        </div>
                     </form>
                 </div>
 
-                <!-- AI Suggestions Section -->
-                <div class="bg-white rounded-lg shadow p-6 mt-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">🤖 AI Suggestions</h3>
-                    <div id="aiSuggestions" class="space-y-3">
-                        <div class="text-gray-500 text-sm">Loading suggestions...</div>
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Payment & Face Registration</h3>
+                    <div class="mb-4">
+                        <h4 class="font-medium text-gray-900 mb-2">Order Summary</h4>
+                        <div id="orderSummary" class="bg-gray-50 p-4 rounded-md">
+                            <p class="text-sm text-gray-600">Select a court to see pricing</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h4 class="font-medium text-gray-900 mb-2">Payment Method</h4>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="radio" name="payment" value="credit" class="mr-2" checked>
+                                <span>Credit Card (Demo)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="payment" value="debit" class="mr-2">
+                                <span>Debit Card (Demo)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="payment" value="paypal" class="mr-2">
+                                <span>PayPal (Demo)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h4 class="font-medium text-gray-900 mb-2">Face Registration</h4>
+                        <p class="text-sm text-gray-600 mb-2">Register your face for verification on arrival</p>
+                        <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+                            <div class="text-4xl mb-2">📷</div>
+                            <p class="text-sm text-gray-600 mb-2">Click to capture face</p>
+                            <button type="button" onclick="captureFace()" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                                Start Camera
+                            </button>
+                            <button type="button" onclick="captureFaceImage()" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 mt-2">
+                                Capture Face
+                            </button>
+                        </div>
+                        <video id="videoElement" class="hidden w-full mt-2 rounded"></video>
+                        <canvas id="canvasElement" class="hidden"></canvas>
+                    </div>
+
+                    <button type="button" onclick="processBooking()" class="w-full bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-700 font-semibold">
+                        Complete Booking
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Face Checker Mode -->
+    <div id="faceMode" class="mode-content hidden">
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Face Verification Station</h2>
+                <p class="text-gray-600">Verify player identity for court bookings</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Today's Bookings</h3>
+                    <div id="todayBookings" class="space-y-3">
+                        <div class="text-gray-500 text-sm">Loading today's bookings...</div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Face Scanner</h3>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-4">
+                        <video id="faceVideo" class="w-full rounded mb-4"></video>
+                        <canvas id="faceCanvas" class="hidden"></canvas>
+                        <div class="flex space-x-2">
+                            <button onclick="startFaceScanning()" class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">
+                                Start Scanning
+                            </button>
+                            <button onclick="stopFaceScanning()" class="flex-1 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700">
+                                Stop Scanning
+                            </button>
+                        </div>
+                        <div id="faceResult" class="mt-4 p-3 rounded-md hidden">
+                            <!-- Face recognition results will appear here -->
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Sidebar -->
-            <div class="lg:col-span-1">
-                <!-- Current Bookings -->
-                <div class="bg-white rounded-lg shadow p-6 mb-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Current Bookings</h3>
-                    <div id="currentBookings" class="space-y-3">
-                        <div class="text-gray-500 text-sm">No bookings yet</div>
+            <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">Verification Log</h3>
+                <div id="verificationLog" class="space-y-2">
+                    <div class="text-gray-500 text-sm">No verifications yet today</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Admin Panel Mode -->
+    <div id="adminMode" class="mode-content hidden">
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Admin Panel</h2>
+                <p class="text-gray-600">Manage bookings, face data, and system analytics</p>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-blue-100 rounded-full">
+                            <span class="text-2xl">📅</span>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm text-gray-500">Today's Bookings</p>
+                            <p id="todayBookingsCount" class="text-2xl font-bold text-gray-900">0</p>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Cancellation Alerts -->
-                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-                    <h3 class="text-lg font-semibold text-yellow-900 mb-4">⚡ Last-Minute Deals</h3>
-                    <div id="cancellationAlerts" class="space-y-3">
-                        <div class="text-yellow-700 text-sm">No cancellations available</div>
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-green-100 rounded-full">
+                            <span class="text-2xl">✅</span>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm text-gray-500">Verified</p>
+                            <p id="verifiedCount" class="text-2xl font-bold text-gray-900">0</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-yellow-100 rounded-full">
+                            <span class="text-2xl">⏰</span>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm text-gray-500">Pending</p>
+                            <p id="pendingCount" class="text-2xl font-bold text-gray-900">0</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-purple-100 rounded-full">
+                            <span class="text-2xl">👤</span>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm text-gray-500">Registered Faces</p>
+                            <p id="registeredFacesCount" class="text-2xl font-bold text-gray-900">0</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </main>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Bookings Management -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Bookings Management</h3>
+                    <div id="bookingsList" class="space-y-3">
+                        <div class="text-gray-500 text-sm">Loading bookings...</div>
+                    </div>
+                </div>
+
+                <!-- Face Data Management -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Face Data Management</h3>
+                    <div id="faceDataList" class="space-y-3">
+                        <div class="text-gray-500 text-sm">Loading face data...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Controls -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">System Controls</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <button onclick="exportBookings()" class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">
+                        Export Bookings
+                    </button>
+                    <button onclick="clearFaceData()" class="bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700">
+                        Clear Face Data
+                    </button>
+                    <button onclick="generateReport()" class="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700">
+                        Generate Report
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
 
     <script src="app.js"></script>
 </body>
