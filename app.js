@@ -53,6 +53,8 @@ async function requestCameraPermission() {
         
         if (result.state === 'denied') {
             showAlert('Camera access is denied. Please enable camera permissions in your browser settings for face recognition features.', 'warning');
+            // Show prominent camera request
+            showCameraRequest();
         } else if (result.state === 'prompt') {
             console.log('Camera permission will be prompted on first use');
         } else if (result.state === 'granted') {
@@ -63,11 +65,78 @@ async function requestCameraPermission() {
         result.addEventListener('change', () => {
             if (result.state === 'denied') {
                 showAlert('Camera permission was revoked. Face recognition features will not work.', 'error');
+                showCameraRequest();
             }
         });
         
     } catch (error) {
         console.log('Permissions API not supported, will prompt on camera access');
+    }
+}
+
+function showCameraRequest() {
+    const requestDiv = document.createElement('div');
+    requestDiv.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50';
+    requestDiv.innerHTML = `
+        <div class="bg-white rounded-lg p-8 max-w-md mx-4">
+            <h3 class="text-xl font-bold text-gray-900 mb-4">📷 Camera Access Required</h3>
+            <p class="text-gray-600 mb-6">This badminton booking system requires camera access for face recognition and verification.</p>
+            <div class="space-y-4">
+                <div class="bg-blue-50 p-4 rounded-md">
+                    <h4 class="font-semibold text-blue-900 mb-2">Why we need camera access:</h4>
+                    <ul class="text-sm text-gray-700 space-y-1">
+                        <li>• Face recognition for secure booking verification</li>
+                        <li>• Prevent unauthorized court access</li>
+                        <li>• Ensure the right person arrives at the court</li>
+                        <li>• Quick and contactless check-in process</li>
+                    </ul>
+                </div>
+                <div class="bg-green-50 p-4 rounded-md">
+                    <h4 class="font-semibold text-green-900 mb-2">Your privacy is important:</h4>
+                    <ul class="text-sm text-gray-700 space-y-1">
+                        <li>• Face data is stored locally and securely</li>
+                        <li>• No images are stored on external servers</li>
+                        <li>• You can revoke access at any time</li>
+                        <li>• Face data is deleted after booking completion</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="flex space-x-4">
+                <button onclick="requestCameraAccessDirectly()" class="flex-1 bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 font-semibold">
+                    Grant Camera Access
+                </button>
+                <button onclick="dismissCameraRequest()" class="flex-1 bg-gray-300 text-gray-700 py-3 px-4 rounded-md hover:bg-gray-400">
+                    Continue Without Camera
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(requestDiv);
+}
+
+async function requestCameraAccessDirectly() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ 
+            video: { width: 640, height: 480 } 
+        });
+        
+        // Stop the stream immediately after getting permission
+        const tracks = stream.getTracks();
+        tracks.forEach(track => track.stop());
+        
+        showAlert('Camera access granted! You can now use face recognition features.', 'success');
+        dismissCameraRequest();
+        
+    } catch (error) {
+        showAlert('Camera access denied. Please enable camera permissions in your browser settings.', 'error');
+    }
+}
+
+function dismissCameraRequest() {
+    const requestDiv = document.querySelector('.fixed.inset-0');
+    if (requestDiv) {
+        requestDiv.remove();
     }
 }
 
@@ -191,6 +260,39 @@ function selectCourt(courtName) {
     });
     
     updateOrderSummary();
+    updateBookingProgress(2, 'Enter Details', 'Fill in your personal information');
+}
+
+function updateBookingProgress(step, title, description) {
+    // Update progress indicator
+    for (let i = 1; i <= 4; i++) {
+        const stepDiv = document.getElementById(`step${i}`);
+        if (stepDiv) {
+            if (i <= step) {
+                stepDiv.className = 'w-8 h-2 rounded-full bg-green-500';
+            } else {
+                stepDiv.className = 'w-8 h-2 rounded-full bg-gray-300';
+            }
+        }
+    }
+    
+    // Update step text
+    const stepText = document.getElementById('stepText');
+    if (stepText) {
+        stepText.textContent = `Step ${step}: ${title}`;
+    }
+    
+    // Update form focus
+    if (step === 2) {
+        const nameInput = document.getElementById('playerName');
+        if (nameInput) nameInput.focus();
+    } else if (step === 3) {
+        const dateInput = document.getElementById('bookingDate');
+        if (dateInput) dateInput.focus();
+    } else if (step === 4) {
+        const captureBtn = document.querySelector('[onclick="captureFace()"]');
+        if (captureBtn) captureBtn.focus();
+    }
 }
 
 function updateOrderSummary() {
@@ -463,6 +565,12 @@ function resetBookingForm() {
 function loadFaceMode() {
     loadTodayBookings();
     loadVerificationLog();
+    // Initialize face checker elements
+    const resultDiv = document.getElementById('faceResult');
+    if (resultDiv) {
+        resultDiv.innerHTML = '<div class="text-gray-500 text-sm">Face scanner ready - Start scanning to verify bookings</div>';
+        resultDiv.classList.remove('hidden');
+    }
 }
 
 function loadTodayBookings() {
