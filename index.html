@@ -175,6 +175,67 @@
                     </button>
                 </div>
             </div>
+            
+            <!-- Cancellation & Queue Management -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Queue Management</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-medium text-gray-900 mb-2">Cancellation Queue</h4>
+                            <div id="cancellationQueue" class="space-y-2 max-h-40 overflow-y-auto">
+                                <div class="text-gray-500 text-sm">No cancellations in queue</div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-900 mb-2">Your Queue Position</h4>
+                            <div id="queuePosition" class="bg-blue-50 p-3 rounded-md">
+                                <p class="text-sm text-gray-600">Not in queue</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- AI Ranking Display -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">AI Ranking System</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-medium text-gray-900 mb-2">Ranking Rules</h4>
+                            <div class="bg-gray-50 p-4 rounded-md text-sm space-y-1">
+                                <div class="flex justify-between">
+                                    <span>📅 Age Score:</span>
+                                    <span>30% of total (max: 30 points)</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>🎾 Frequency Score:</span>
+                                    <span>40% of total (max: 40 points)</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>✅ Reliability Score:</span>
+                                    <span>20% of total (max: 20 points)</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>👤 Seniority Score:</span>
+                                    <span>10% of total (max: 10 points)</span>
+                                </div>
+                                <div class="border-t pt-2 mt-2">
+                                    <div class="flex justify-between font-bold">
+                                        <span>Total Score:</span>
+                                        <span>100 points maximum</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-900 mb-2">Current Queue</h4>
+                            <div id="rankingQueue" class="space-y-2 max-h-60 overflow-y-auto">
+                                <div class="text-gray-500 text-sm">Loading queue...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 
@@ -313,6 +374,44 @@
                 </div>
             </div>
         </main>
+    </div>
+
+    <!-- AI Chatbot Assistant -->
+    <div id="chatbotContainer" class="fixed bottom-4 right-4 w-80 bg-white rounded-lg shadow-xl border border-gray-200 hidden">
+        <div class="flex items-center justify-between p-3 border-b">
+            <h3 class="font-semibold text-gray-900">🤖 AI Assistant</h3>
+            <button onclick="toggleChatbot()" class="text-gray-500 hover:text-gray-700">
+                <span id="chatbotToggle">−</span>
+            </button>
+        </div>
+        <div id="chatbotContent" class="hidden">
+            <div id="chatMessages" class="h-64 overflow-y-auto p-3 space-y-2">
+                <div class="bg-blue-50 p-2 rounded-lg text-sm text-blue-800">
+                    <p class="font-medium">AI Assistant:</p>
+                    <p>Hello! I'm here to help you with court bookings, queue management, and any questions about our badminton facilities. How can I assist you today?</p>
+                </div>
+            </div>
+            <div class="p-3 border-t">
+                <div class="flex space-x-2">
+                    <input type="text" id="chatInput" placeholder="Type your message..." 
+                        class="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button onclick="sendMessage()" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm">
+                        Send
+                    </button>
+                </div>
+                <div class="mt-2 flex space-x-2">
+                    <button onclick="quickQuestion('how to book')" class="px-3 py-1 bg-gray-100 text-gray-700 rounded text-xs hover:bg-gray-200">
+                        How to book?
+                    </button>
+                    <button onclick="quickQuestion('cancellation policy')" class="px-3 py-1 bg-gray-100 text-gray-700 rounded text-xs hover:bg-gray-200">
+                        Cancellation policy?
+                    </button>
+                    <button onclick="quickQuestion('queue rules')" class="px-3 py-1 bg-gray-100 text-gray-700 rounded text-xs hover:bg-gray-200">
+                        Queue rules?
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="app.js"></script>

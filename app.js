@@ -16,6 +16,17 @@ let faceDescriptors = new Map(); // Store face descriptors for matching
 let bookings = [];
 let faceData = [];
 let verificationLog = [];
+let cancellationQueue = []; // Queue for cancelled slots
+let userProfiles = []; // User profiles for AI ranking
+
+// AI Ranking System Configuration
+const rankingRules = {
+    age: { weight: 0.3, maxScore: 30 },
+    frequency: { weight: 0.4, maxScore: 40 },
+    reliability: { weight: 0.2, maxScore: 20 },
+    seniority: { weight: 0.1, maxScore: 10 },
+    maxTotalScore: 100
+};
 
 // Court pricing
 const courtPricing = {
@@ -30,9 +41,35 @@ document.addEventListener('DOMContentLoaded', function() {
     loadUserPreferences();
     initializeApp();
     setupEventListeners();
+    requestCameraPermission();
     loadFaceApiModels();
     switchMode('user');
 });
+
+// Camera permission handling
+async function requestCameraPermission() {
+    try {
+        const result = await navigator.permissions.query({ name: 'camera' });
+        
+        if (result.state === 'denied') {
+            showAlert('Camera access is denied. Please enable camera permissions in your browser settings for face recognition features.', 'warning');
+        } else if (result.state === 'prompt') {
+            console.log('Camera permission will be prompted on first use');
+        } else if (result.state === 'granted') {
+            console.log('Camera permission already granted');
+        }
+        
+        // Listen for permission changes
+        result.addEventListener('change', () => {
+            if (result.state === 'denied') {
+                showAlert('Camera permission was revoked. Face recognition features will not work.', 'error');
+            }
+        });
+        
+    } catch (error) {
+        console.log('Permissions API not supported, will prompt on camera access');
+    }
+}
 
 // Load face-api.js models
 async function loadFaceApiModels() {
@@ -62,6 +99,9 @@ function initializeApp() {
     // Load demo data
     loadDemoData();
     updateStats();
+    loadCancellationQueue();
+    loadUserProfiles();
+    updateRankingQueue();
 }
 
 function setupEventListeners() {
@@ -848,6 +888,213 @@ Verification Rate: ${todayBookings.length > 0 ? Math.round((verified.length / to
     showAlert('Report generated successfully', 'success');
 }
 
+// Cancellation and Queue Functions
+function loadCancellationQueue() {
+    const container = document.getElementById('cancellationQueue');
+    if (!container) return;
+    
+    if (cancellationQueue.length === 0) {
+        container.innerHTML = '<div class="text-gray-500 text-sm">No cancellations in queue</div>';
+        return;
+    }
+    
+    container.innerHTML = cancellationQueue.map((item, index) => `
+        <div class="flex justify-between items-center p-2 border rounded hover:bg-gray-50">
+            <div>
+                <span class="font-medium">${item.court} - ${item.time}</span>
+                <span class="text-xs text-gray-500 ml-2">Cancelled by: ${item.cancelledBy}</span>
+            </div>
+            <div class="text-right">
+                <span class="text-xs text-gray-500">Position: ${index + 1}</span>
+                <button onclick="joinQueue('${item.id}')" class="ml-2 px-2 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700">
+                    Join Queue
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function joinQueue(cancellationId) {
+    const item = cancellationQueue.find(c => c.id === cancellationId);
+    if (!item) return;
+    
+    // Check if user already in queue
+    const existingQueue = cancellationQueue.filter(c => c.joinedBy === currentUser);
+    if (existingQueue.length > 0) {
+        showAlert('You are already in another queue. Please leave that queue first.', 'warning');
+        return;
+    }
+    
+    // Add user to queue
+    item.joinedBy = currentUser;
+    item.joinedAt = new Date().toISOString();
+    
+    showAlert(`You've joined the queue for ${item.court} at ${item.time}`, 'success');
+    loadCancellationQueue();
+    updateQueuePosition();
+}
+
+function cancelBooking(bookingId) {
+    const booking = bookings.find(b => b.id === bookingId);
+    if (!booking) return;
+    
+    // Add to cancellation queue
+    const cancelledSlot = {
+        id: 'CQ' + Date.now(),
+        court: booking.court,
+        date: booking.date,
+        time: booking.time,
+        cancelledBy: booking.playerName,
+        originalBookingId: bookingId,
+        joinedBy: null,
+        joinedAt: null,
+        createdAt: new Date().toISOString()
+    };
+    
+    cancellationQueue.push(cancelledSlot);
+    
+    // Update original booking status
+    booking.verificationStatus = 'cancelled';
+    
+    showAlert('Booking cancelled and added to queue system', 'success');
+    loadCancellationQueue();
+    updateQueuePosition();
+}
+
+function updateQueuePosition() {
+    const container = document.getElementById('queuePosition');
+    if (!container) return;
+    
+    const userQueueItems = cancellationQueue.filter(c => c.joinedBy === currentUser);
+    
+    if (userQueueItems.length === 0) {
+        container.innerHTML = '<p class="text-sm text-gray-600">Not in queue</p>';
+        return;
+    }
+    
+    const position = cancellationQueue.indexOf(userQueueItems[0]) + 1;
+    container.innerHTML = `
+        <div class="space-y-2">
+            <p class="text-sm font-medium text-gray-900">Queue Position: ${position}</p>
+            <p class="text-xs text-gray-600">${userQueueItems.length} ${userQueueItems.length === 1 ? 'slot' : 'slots'} in queue</p>
+        </div>
+    `;
+}
+
+// AI Ranking System Functions
+function loadUserProfiles() {
+    // Initialize demo user profiles with ranking data
+    userProfiles = [
+        {
+            id: 'user1',
+            name: 'John Doe',
+            age: 25,
+            seniority: 2, // years
+            frequency: 15, // bookings per month
+            reliability: 85, // percentage
+            totalScore: 0
+        },
+        {
+            id: 'user2',
+            name: 'Jane Smith',
+            age: 35,
+            seniority: 5,
+            frequency: 20,
+            reliability: 95,
+            totalScore: 0
+        },
+        {
+            id: 'user3',
+            name: 'Robert Chen',
+            age: 65,
+            seniority: 8,
+            frequency: 12,
+            reliability: 90,
+            totalScore: 0
+        }
+    ];
+    
+    // Calculate scores for all users
+    userProfiles = userProfiles.map(user => ({
+        ...user,
+        ageScore: calculateAgeScore(user.age),
+        frequencyScore: calculateFrequencyScore(user.frequency),
+        reliabilityScore: calculateReliabilityScore(user.reliability),
+        seniorityScore: calculateSeniorityScore(user.seniority),
+        totalScore: 0
+    }));
+    
+    // Calculate total scores
+    userProfiles.forEach(user => {
+        user.totalScore = 
+            user.ageScore + 
+            user.frequencyScore + 
+            user.reliabilityScore + 
+            user.seniorityScore;
+    });
+    
+    // Sort by total score (highest first)
+    userProfiles.sort((a, b) => b.totalScore - a.totalScore);
+}
+
+function calculateAgeScore(age) {
+    // Younger players get higher scores
+    if (age <= 25) return rankingRules.age.maxScore;
+    if (age <= 35) return rankingRules.age.maxScore * 0.8;
+    if (age <= 50) return rankingRules.age.maxScore * 0.6;
+    if (age <= 65) return rankingRules.age.maxScore * 0.4;
+    return rankingRules.age.maxScore * 0.2;
+}
+
+function calculateFrequencyScore(frequency) {
+    // More frequent players get higher scores
+    const normalizedScore = (frequency / 20) * rankingRules.frequency.maxScore;
+    return Math.min(normalizedScore, rankingRules.frequency.maxScore);
+}
+
+function calculateReliabilityScore(reliability) {
+    // Higher reliability percentage gets higher scores
+    return (reliability / 100) * rankingRules.reliability.maxScore;
+}
+
+function calculateSeniorityScore(seniority) {
+    // More years as member gets higher scores
+    const normalizedScore = (seniority / 10) * rankingRules.seniority.maxScore;
+    return Math.min(normalizedScore, rankingRules.seniority.maxScore);
+}
+
+function updateRankingQueue() {
+    const container = document.getElementById('rankingQueue');
+    if (!container) return;
+    
+    if (userProfiles.length === 0) {
+        container.innerHTML = '<div class="text-gray-500 text-sm">No users in queue</div>';
+        return;
+    }
+    
+    container.innerHTML = userProfiles.map((user, index) => `
+        <div class="flex items-center justify-between p-3 border rounded hover:bg-gray-50">
+            <div class="flex items-center space-x-3">
+                <div class="text-lg font-bold text-gray-900">${index + 1}</div>
+                <div>
+                    <div class="font-medium text-gray-900">${user.name}</div>
+                    <div class="text-xs text-gray-600">Age: ${user.age} | Seniority: ${user.seniority}y</div>
+                </div>
+            </div>
+            <div class="text-right">
+                <div class="text-lg font-bold text-blue-600">${user.totalScore}</div>
+                <div class="text-xs text-gray-600">Total Score</div>
+                <div class="mt-1 space-y-1">
+                    <div class="text-xs text-gray-500">📅 ${user.ageScore.toFixed(1)}</div>
+                    <div class="text-xs text-gray-500">🎾 ${user.frequencyScore.toFixed(1)}</div>
+                    <div class="text-xs text-gray-500">✅ ${user.reliabilityScore.toFixed(1)}</div>
+                    <div class="text-xs text-gray-500">👤 ${user.seniorityScore.toFixed(1)}</div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
 // Demo Data
 function loadDemoData() {
     // Add some demo bookings
@@ -907,6 +1154,21 @@ function loadDemoData() {
             timestamp: new Date().toISOString()
         }
     ];
+    
+    // Add demo cancellation queue items
+    cancellationQueue = [
+        {
+            id: 'CQ001',
+            court: 'Court C',
+            date: today,
+            time: '16:00-17:00',
+            cancelledBy: 'Mike Wilson',
+            originalBookingId: 'BK003',
+            joinedBy: null,
+            joinedAt: null,
+            createdAt: new Date().toISOString()
+        }
+    ];
 }
 
 // Dark Mode Functions
@@ -931,6 +1193,101 @@ function updateDarkModeUI() {
 
 function saveUserPreferences() {
     localStorage.setItem('darkMode', isDarkMode.toString());
+}
+
+// AI Chatbot Functions
+function toggleChatbot() {
+    const container = document.getElementById('chatbotContainer');
+    const content = document.getElementById('chatbotContent');
+    const toggle = document.getElementById('chatbotToggle');
+    
+    if (container.classList.contains('hidden')) {
+        container.classList.remove('hidden');
+        content.classList.remove('hidden');
+        toggle.textContent = '−';
+    } else {
+        container.classList.add('hidden');
+        content.classList.add('hidden');
+        toggle.textContent = '+';
+    }
+}
+
+function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const message = input.value.trim();
+    
+    if (!message) return;
+    
+    addChatMessage('user', message);
+    input.value = '';
+    
+    // Simulate AI response
+    setTimeout(() => {
+        const response = generateAIResponse(message);
+        addChatMessage('ai', response);
+    }, 1000);
+}
+
+function addChatMessage(sender, message) {
+    const messagesContainer = document.getElementById('chatMessages');
+    if (!messagesContainer) return;
+    
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `p-2 rounded-lg ${sender === 'user' ? 'bg-gray-100 ml-8' : 'bg-blue-50'}`;
+    
+    const senderDiv = document.createElement('div');
+    senderDiv.className = 'font-medium text-sm';
+    senderDiv.textContent = sender === 'user' ? 'You:' : 'AI Assistant:';
+    
+    const textDiv = document.createElement('p');
+    textDiv.className = 'text-sm text-gray-700 mt-1';
+    textDiv.textContent = message;
+    
+    messageDiv.appendChild(senderDiv);
+    messageDiv.appendChild(textDiv);
+    messagesContainer.appendChild(messageDiv);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+function generateAIResponse(userMessage) {
+    const lowerMessage = userMessage.toLowerCase();
+    
+    // Simple rule-based responses
+    if (lowerMessage.includes('how to book') || lowerMessage.includes('booking')) {
+        return 'To book a court: 1) Select your preferred court (A-D), 2) Choose date and time slot, 3) Enter your details, 4) Capture your face for verification, 5) Complete payment. Courts A and B are premium with better facilities!';
+    }
+    
+    if (lowerMessage.includes('cancel') || lowerMessage.includes('cancellation')) {
+        return 'Cancellation policy: You can cancel bookings up to 2 hours before your slot. Cancelled slots are added to the queue system where other players can join. Players with higher ranking scores get priority for cancelled slots.';
+    }
+    
+    if (lowerMessage.includes('queue') || lowerMessage.includes('ranking')) {
+        return 'Queue system: Players are ranked by age (30%), frequency (40%), reliability (20%), and seniority (10%). Higher scores mean better queue position. Cancellation queue operates on first-come-first-served basis for players who join.';
+    }
+    
+    if (lowerMessage.includes('senior') || lowerMessage.includes('elderly') || lowerMessage.includes('help')) {
+        return 'Senior assistance: I can help you with booking, navigation, and understanding the queue system. You can ask me "how to book", "cancellation policy", or "queue rules" anytime. The face recognition helps verify identity quickly!';
+    }
+    
+    if (lowerMessage.includes('court') || lowerMessage.includes('facility')) {
+        return 'Our facilities: Court A & B are premium ($20/hr) with air conditioning and pro lighting. Courts C & D are standard ($15/hr) and budget ($10/hr) respectively. All courts have proper flooring and net systems.';
+    }
+    
+    return 'I\'m here to help with court bookings, queue management, and facility information. You can ask me about booking procedures, cancellation policies, queue rules, or court facilities. How else can I assist you?';
+}
+
+function quickQuestion(topic) {
+    const questions = {
+        'how to book': 'How do I book a court?',
+        'cancellation policy': 'What is the cancellation policy?',
+        'queue rules': 'How does the queue system work?'
+    };
+    
+    const input = document.getElementById('chatInput');
+    if (input) {
+        input.value = questions[topic] || '';
+        sendMessage();
+    }
 }
 
 // Utility Functions
